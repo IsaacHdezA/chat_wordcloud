@@ -15,7 +15,7 @@ discuss it and have a laugh over all the words you and your friends use more.
 1. Create the project's isolated environment with:
 
 ```sh
-$ python3 -m venv .wc_env
+$ python3 -m venv .env
 ```
 
 2. Install project dependencies:
