@@ -10,5 +10,17 @@ def read_json(path: str) -> dict:
     Returns:
         A json's equivalent dictionary with all its content.
     """
-    print(f'Tengo sida')
-    return
+    data = {}
+
+    with open(path, "r") as input_file:
+        data = json.loads(input_file.read())
+
+    return data
+
+def print_dict(tree, depth: int = 0) -> None:
+    for key, val in sorted(tree.items(), key = lambda x: x[0]):
+        if(isinstance(val, dict)):
+            print(f'{"  " * depth}+ "{key}":')
+            print_dict(val, depth + 1)
+        else:
+            print(f'{"  " * depth}+ "{key}": {val}')
