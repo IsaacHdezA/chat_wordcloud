@@ -99,17 +99,28 @@ def clean_text(text: str, stop_words: set):
 
     return tokens
 
-def get_messages_by_user(messages: list):
-    msgs_by_user = {}
+def get_messages_by_user(messages: list, stop_words: set):
+    usr_msgs = {}
 
     for message in messages:
-        if(message["type"] == "message"):
-            msg_from = message.get("from")
-            text_entities = message["text_entities"] 
+        if(not(message["type"] == "message")): continue
 
-            if(text_entities):
-                msgs_by_user[msg_from] = msgs_by_user.get(msg_from, { "messages": [] })
-                msgs_by_user[msg_from]["messages"].append(text_entities[0]["text"])
+        msg_from = message["from"]
+        usr_msgs[msg_from] = usr_msgs.get(msg_from, {
+            "messages": [],
+            "vocabulary": {}
+        })
 
-    return msgs_by_user
+        text_entities = message["text_entities"]
+        for entity in text_entities:
+            text = entity["text"]
+            usr_msgs[msg_from]["messages"].append(text)
+
+            tokens = clean_text(text, stop_words)
+
+            for word in tokens:
+                usr_msgs[msg_from]["vocabulary"][word] = \
+                    usr_msgs[msg_from]["vocabulary"].get(word, 0) + 1
+
+    return usr_msgs
 
