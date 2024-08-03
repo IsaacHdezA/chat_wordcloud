@@ -1,10 +1,10 @@
 import json
 import re
 
-def read_stop_words(lang: str):
+def read_stop_words(lang: str, extra: list[str]):
     words = []
     with open(f'./include/nltk_data/corpora/stopwords/{lang}', 'r') as input:
-        words = set([word for word in input.read().split('\n')])
+        words = set([word for word in input.read().split('\n')] + extra)
 
     return words
 
@@ -123,4 +123,21 @@ def get_messages_by_user(messages: list, stop_words: set):
                     usr_msgs[msg_from]["vocabulary"].get(word, 0) + 1
 
     return usr_msgs
+
+def get_global_vocabulary(user_dict: dict) -> dict:
+    vocabulary = {}
+    for _, d in user_dict.items():
+        for word, freq in d["vocabulary"].items():
+            vocabulary[word] = vocabulary.get(word, 0) + freq
+
+    return vocabulary
+
+def get_top_words(vocabulary: dict, top_n: int = None) -> dict:
+    if(not top_n): top_n = len(vocabulary)
+
+    return dict(sorted(
+        list(vocabulary.items())[:top_n],
+        key = lambda x: x[1],
+        reverse = True
+    ))
 
