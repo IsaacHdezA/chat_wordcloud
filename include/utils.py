@@ -1,5 +1,8 @@
+import matplotlib.pyplot as plt
 import json
 import re
+
+from wordcloud import WordCloud as WC
 
 def read_stop_words(lang: str, extra: list[str]):
     words = []
@@ -141,3 +144,15 @@ def get_top_words(vocabulary: dict, top_n: int = None) -> dict:
         reverse = True
     ))
 
+def create_word_cloud(freqs_dict: dict, out_path: str)  -> None:
+    wc = WC(
+        background_color = 'white',
+        width = 1200,
+        height = 1000,
+        relative_scaling = 1
+    )
+
+    wc.generate_from_frequencies(freqs_dict)
+    wc.to_file(out_path)
+
+    return
